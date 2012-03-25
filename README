@@ -12,7 +12,7 @@ In your LocalSettings.php add:
 
   php extensions/ExtensionFetcher/maintenance/listExtensions.php
 
-Fetches all available extensions from MediaWiki's gerrit repos.
+Shows list of all available extensions from MediaWiki's gerrit repos.
 
 Full lists visible here:
 https://gerrit.wikimedia.org/r/#admin,projects
