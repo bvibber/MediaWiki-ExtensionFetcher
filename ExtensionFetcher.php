@@ -11,5 +11,30 @@ $wgExtFetchGerrit = 'gerrit.wikimedia.org';
 $wgExtFetchGitDeveloper = "ssh://$1:29418";
 $wgExtFetchGitAnon = "https://$1/r/p";
 
-$wgAutoloadClasses['ExtensionFetcher'] = dirname( __FILE__ ) . '/ExtensionFetcher.body.php';
-$wgAutoloadClasses['ExtFetchExtension'] = dirname( __FILE__ ) . '/ExtensionFetcher.body.php';
+$dir = dirname( __FILE__ );
+$wgAutoloadClasses['ExtensionFetcher'] = $dir . '/ExtensionFetcher.body.php';
+$wgAutoloadClasses['ExtFetchExtension'] = $dir . '/ExtensionFetcher.body.php';
+$wgAutoloadClasses['SpecialExtensionFetcher'] = $dir . '/specials/SpecialExtensionFetcher.php';
+$wgAutoloadClasses['ApiExtFetch'] = $dir . '/api/ApiExtFetch.php';
+
+$wgExtensionMessagesFiles['ExtensionFetcher'] = $dir . '/ExtensionFetcher.i18n.php';
+
+$wgSpecialPages['ExtensionFetcher'] = 'SpecialExtensionFetcher';
+
+$wgAPIModules['extfetch'] = 'ApiExtFetch';
+
+$wgResourceModules['ext.extfetch'] = array(
+	'localBasePath' => dirname( __FILE__ ) . '/modules',
+	'remoteExtPath' => 'ExtensionFetcher/modules',
+	'scripts' => 'ext.extfetch.js',
+	'dependencies' => array(
+		'mediawiki.util',
+		'mediawiki.user',
+		'user.tokens'
+	)
+);
+
+$wgAvailablePermissions[] = 'extension-install';
+$wgGroupPermissions['sysop']['extension-install'] = true; // ???? safe default? :)
+
+

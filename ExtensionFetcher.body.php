@@ -35,7 +35,7 @@ class ExtensionFetcher {
 		$out = array();
 		$repos = self::discoverRepos();
 		foreach( $repos as $repo ) {
-			if ( $repo['parent']['name'] == 'mediawiki/extensions' ) {
+			if ( isset($repo['parent']) && $repo['parent']['name'] == 'mediawiki/extensions' ) {
 				$ext = new ExtFetchExtension( $repo );
 				$out[$ext->name] = $ext;
 			}
@@ -63,14 +63,14 @@ class ExtFetchExtension {
 	 * @param bool auth
 	 */
 	function cloneRepo( $asDeveloper=false ) {
-		global $wgExtFetchGerrit, $wgExtFetchGitDeveloper, $wgExtFetchGitAnon, $IP;
+		global $wgExtFetchGerrit, $wgExtFetchGitDeveloper, $wgExtFetchGitAnon;
 		if ( $asDeveloper ) {
 			$baseUrl = $wgExtFetchGitDeveloper;
 		} else {
 			$baseUrl = $wgExtFetchGitAnon;
 		}
 		$url = str_replace( '$1', $wgExtFetchGerrit, $baseUrl ) . '/' . $this->repo;
-		$dest = "$IP/extensions/$this->name";
+		$dest = $this->getDirectory();
 		$cmd = wfEscapeShellArg(
 			'git',
 			'clone',
@@ -80,4 +80,18 @@ class ExtFetchExtension {
 		echo "$cmd\n";
 		wfShellExec( $cmd );
 	}
+	
+	function getLink() {
+		return 'https://www.mediawiki.org/wiki/Extension:' . ucfirst( $this->name );
+	}
+	
+	function getDirectory() {
+		global $IP;
+		return "$IP/extensions/$this->name";
+	}
+	
+	function isPresent() {
+		return is_dir( $this->getDirectory() );
+	}
 }
+
